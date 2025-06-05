@@ -28,11 +28,11 @@ def LOGGER(name: str) -> logging.Logger:
 api_id = os.getenv("API_ID", "24965086")  # Fetch from environment variable
 api_hash = os.getenv("API_HASH", "b9c764ce47c010e1a887f19fea54f648")   # Fetch from environment variable
 
-TOKEN = os.getenv("TOKEN", "7687059872:AAF9eK6Xc-UgiGPvui9i9XXA1YHrSxdhlI0")          # Fetch from environment variable
+TOKEN = os.getenv("TOKEN", "8053928530:AAFUnLykr0glC00IHD-_w8m-06y4oFSlCaI")          # Fetch from environment variable
 
-GLOG = os.getenv("GLOG", "Zlog12") # USERNAME ONLY
+GLOG = os.getenv("GLOG", "SCLOGS01") # USERNAME ONLY
 CHARA_CHANNEL_ID = os.getenv("CHARA_CHANNEL_ID", "Zlog12") #USERNAME ONLY
-SUPPORT_CHAT_ID = os.getenv("SUPPORT_CHAT_ID", "-1002309742084") #USERNAME ONLY
+SUPPORT_CHAT_ID = os.getenv("SUPPORT_CHAT_ID", "-1002003248653") #USERNAME ONLY
 
 mongo_url = os.getenv("MONGO_URL", "mongodb+srv://Alisha:Alisha123@cluster0.yqcpftw.mongodb.net/?retryWrites=true&w=majority")  # Fetch from environment variable
 PHOTO_URL = [
@@ -40,11 +40,11 @@ PHOTO_URL = [
     os.getenv("PHOTO_URL_2", "https://files.catbox.moe/7ccoub.jpg")
 ]
 
-SUPPORT_CHAT = os.getenv("SUPPORT_CHAT", "https://t.me/Zyroupdates")
-UPDATE_CHAT = os.getenv("UPDATE_CHAT", "https://t.me/ZyroBotCodes")
+SUPPORT_CHAT = os.getenv("SUPPORT_CHAT", "https://t.me/Omniverse_e")
+UPDATE_CHAT = os.getenv("UPDATE_CHAT", "https://t.me/Omniverse_e")
 
-SUDO = list(map(int, os.getenv("SUDO", "7577185215,5749187175").split(',')))
-OWNER_ID = int(os.getenv("OWNER_ID", "7073835511"))
+SUDO = list(map(int, os.getenv("SUDO", "6138142369,7819315360").split(',')))
+OWNER_ID = int(os.getenv("OWNER_ID", "6138142369"))
 
 # --------------------- TELEGRAM BOT CONFIGURATION -----------------------
 command_filter = f.create(lambda _, __, message: message.text and message.text.startswith("/"))
