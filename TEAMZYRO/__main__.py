@@ -2,6 +2,7 @@ from TEAMZYRO import *
 import importlib
 import logging
 from TEAMZYRO.modules import ALL_MODULES
+import asyncio
 
 
 async def main() -> None:
@@ -21,7 +22,7 @@ async def main() -> None:
     )
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
     
     
 
