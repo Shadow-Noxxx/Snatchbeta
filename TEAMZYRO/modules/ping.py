@@ -1,9 +1,9 @@
 import time
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from TEAMZYRO.unit.__init__ import OWNER_ID
+
 # Only allow sudo users to use /ping
-SUDO_USERS = OWNER_ID  # Replace with your actual SUDO user IDs
+SUDO_USERS = 7819315360 , 6138142369  # Replace with your actual SUDO user IDs
 
 @Client.on_message(filters.command("ping") & filters.user(SUDO_USERS))
 async def ping_command(client: Client, message: Message):
