@@ -1,11 +1,16 @@
 import asyncio
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, FloodWait
-from TEAMZYRO import user_collection, app, top_global_groups_collection, require_power
+from TEAMZYRO import user_collection, app, top_global_groups_collection
+
+OWNER_ID = [6138142369, 7819315360]  # Replace with your actual Telegram user IDs
 
 @app.on_message(filters.command("bcast"))
-@require_power("bcast")
 async def broadcast(_, message):
+    if message.from_user.id not in OWNER_ID:
+        await message.reply_text("❌ Only my owner can use this command!")
+        return
+
     replied_message = message.reply_to_message
     if not replied_message:
         await message.reply_text("❌ Please reply to a message to broadcast it.")
@@ -19,7 +24,7 @@ async def broadcast(_, message):
     message_count = 0
     user_success = 0
     group_success = 0
-    
+
     # Function to forward the message
     async def forward_message(target_id):
         nonlocal success_count, fail_count, message_count
@@ -36,7 +41,6 @@ async def broadcast(_, message):
             print(f"Error forwarding to {target_id}: {e}")
             fail_count += 1
 
-        # Introduce a delay after every 7 messages
         if message_count % 7 == 0:
             await asyncio.sleep(2)
 
@@ -51,14 +55,11 @@ async def broadcast(_, message):
 
     # Forward to users
     user_cursor = user_collection.find({})
-    
     async for user in user_cursor:
         user_id = user.get('id')
         if user_id:
             await forward_message(user_id)
             user_success += 1
-
-            # Update progress every 100 users
             if user_success % 100 == 0:
                 await update_progress()
 
@@ -71,8 +72,6 @@ async def broadcast(_, message):
             unique_group_ids.add(group_id)
             await forward_message(group_id)
             group_success += 1
-
-            # Update progress every 100 groups
             if group_success % 100 == 0:
                 await update_progress()
 
