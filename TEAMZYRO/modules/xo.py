@@ -4,6 +4,13 @@ from telegram.ext import (
     CommandHandler, CallbackQueryHandler, MessageHandler, ContextTypes, filters
 )
 from TEAMZYRO import ZYRO as bot
+import asyncio
+from pyrogram import Client, filters, types as t
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from datetime import datetime, timedelta
+from TEAMZYRO import user_collection, collection, SUPPORT_CHAT_ID as chat
+
+
 active_xo_games = {}
 @bot.on_message(filters.command(["xo"]))
 async def xo_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
