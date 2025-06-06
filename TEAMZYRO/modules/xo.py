@@ -3,7 +3,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     CommandHandler, CallbackQueryHandler, MessageHandler, ContextTypes, filters
 )
-
+from TEAMZYRO import ZYRO as bot
 active_xo_games = {}
 @bot.on_message(filters.command(["xo"]))
 async def xo_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
