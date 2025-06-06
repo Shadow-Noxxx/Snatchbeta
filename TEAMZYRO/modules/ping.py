@@ -1,18 +1,14 @@
 import time
-from telegram import Update
-from telegram.ext import CommandHandler, ContextTypes
+from pyrogram import Client, filters
+from pyrogram.types import Message
+from TEAMZYRO.unit.__init__ import OWNER_ID
+# Only allow sudo users to use /ping
+SUDO_USERS = OWNER_ID  # Replace with your actual SUDO user IDs
 
-from TEAMZYRO.unit.__init__ import application, sudo_users  # This will be the set, not collection
-
-async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user.id
-    if user_id not in sudo_users:
-        await update.message.reply_text("❌ This command is only for Sudo users.")
-        return
-    start = time.time()
-    sent = await update.message.reply_text("🏓 Pong!")
-    end = time.time()
-    ms = round((end - start) * 1000, 3)
-    await sent.edit_text(f"🏓 Pong! `{ms} ms`", parse_mode="Markdown")
-
-application.add_handler(CommandHandler("ping", ping))
+@Client.on_message(filters.command("ping") & filters.user(SUDO_USERS))
+async def ping_command(client: Client, message: Message):
+    start_time = time.time()
+    reply = await message.reply_text("🏓 Pong...")
+    end_time = time.time()
+    latency = round((end_time - start_time) * 1000, 3)
+    await reply.edit_text(f"🏓 Pong! `{latency}ms`")
