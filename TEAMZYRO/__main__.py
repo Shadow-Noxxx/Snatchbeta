@@ -2,12 +2,9 @@ from TEAMZYRO import *
 import importlib
 import logging
 from TEAMZYRO.modules import ALL_MODULES
-import asyncio
 
 
-async def main() -> None:
-    await load_sudo_users()
-    print("✅ Sudo users loaded.")
+def main() -> None:
     print("✅ Bot is now running.")
     await application.updater.idle()
     for module_name in ALL_MODULES:
@@ -22,8 +19,6 @@ async def main() -> None:
     )
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
     
-    
-
     
