@@ -1,23 +1,31 @@
-from TEAMZYRO import *
+import asyncio
 import importlib
 import logging
+from TEAMZYRO import *
+from TEAMZYRO import application, LOGGER, send_start_message
 from TEAMZYRO.modules import ALL_MODULES
 
 
-def main() -> None:
-    await application.updater.idle()
+async def main():
+    print("✅ Bot is now running.")
+
+    # Import all modules to register handlers
     for module_name in ALL_MODULES:
-        imported_module = importlib.import_module("TEAMZYRO.modules." + module_name)
+        importlib.import_module("TEAMZYRO.modules." + module_name)
     LOGGER("TEAMZYRO.modules").info("𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...")
 
-    ZYRO.start()
-    application.run_polling(drop_pending_updates=True)
+    # Start the application
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling()
+
     send_start_message()
     LOGGER("TEAMZYRO").info(
         "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎MADE BY TEAMZYRO☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
     )
 
+    await application.updater.idle()
+
+
 if __name__ == "__main__":
-    main()
-    
-  
+    asyncio.run(main())
