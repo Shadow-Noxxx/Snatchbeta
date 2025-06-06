@@ -43,10 +43,11 @@ PHOTO_URL = [
 SUPPORT_CHAT = os.getenv("SUPPORT_CHAT", "https://t.me/midexozbotupdates")
 UPDATE_CHAT = os.getenv("UPDATE_CHAT", "https://t.me/midexozbotupdates")
 
-SUDO = list(map(int, os.getenv("SUDO", "6138142369,7819315360").split(',')))
 import os
 
-OWNER_ID = list(map(int, os.getenv("OWNER_ID", "6138142369,7819315360").split(",")))
+SUDO = list(map(int, os.getenv("SUDO", "7819315360").split(',')))
+OWNER_ID = list(map(int, os.getenv("OWNER_ID", "7819315360").split(',')))
+
 
 
 # --------------------- TELEGRAM BOT CONFIGURATION -----------------------
