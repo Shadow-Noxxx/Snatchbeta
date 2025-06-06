@@ -49,8 +49,7 @@ async def generate_start_message(client, message):
         [InlineKeyboardButton("Add to Your Group", url=f"https://t.me/{bot_user.username}?startgroup=true")],
         [InlineKeyboardButton("Support", url=SUPPORT_CHAT), 
          InlineKeyboardButton("Channel", url=UPDATE_CHAT)],
-        [InlineKeyboardButton("Help", callback_data="open_help")],
-        [InlineKeyboardButton("GitHub", url="https://github.com/MrZyro/ZyroWaifu")]
+        [InlineKeyboardButton("Help", callback_data="open_help")]
     ]
     
     return caption, InlineKeyboardMarkup(buttons)
