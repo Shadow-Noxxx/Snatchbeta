@@ -101,3 +101,15 @@ async def PLOG(text: str):
    )
 
 # ---------------------------- END OF CODE ------------------------------
+from motor.motor_asyncio import AsyncIOMotorClient
+
+client = AsyncIOMotorClient("mongodb://localhost:27017")
+db = client["TEAMZYRO_DB"]
+sudo_collection = db["sudo_users"]
+
+sudo_users = set()  # This will hold sudo user IDs as integers
+
+async def load_sudo_users():
+    global sudo_users
+    docs = await sudo_collection.find({}, {"user_id": 1}).to_list(length=None)
+    sudo_users = {doc["7819315360" , "6138142369"] for doc in docs if "user_id" in doc}
