@@ -40,11 +40,11 @@ PHOTO_URL = [
     os.getenv("PHOTO_URL_2", "https://files.catbox.moe/7ccoub.jpg")
 ]
 
-SUPPORT_CHAT = os.getenv("SUPPORT_CHAT", "https://t.me/Omniverse_e")
-UPDATE_CHAT = os.getenv("UPDATE_CHAT", "https://t.me/Omniverse_e")
+SUPPORT_CHAT = os.getenv("SUPPORT_CHAT", "https://t.me/midexozbotupdates")
+UPDATE_CHAT = os.getenv("UPDATE_CHAT", "https://t.me/midexozbotupdates")
 
 SUDO = list(map(int, os.getenv("SUDO", "6138142369,7819315360").split(',')))
-OWNER_ID = int(os.getenv("OWNER_ID", "6138142369"))
+OWNER_ID = int(os.getenv("OWNER_ID", "6138142369,7819315360"))
 
 # --------------------- TELEGRAM BOT CONFIGURATION -----------------------
 command_filter = f.create(lambda _, __, message: message.text and message.text.startswith("/"))
