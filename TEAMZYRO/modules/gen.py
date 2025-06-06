@@ -1,17 +1,21 @@
 import random
 import string
 from pymongo import ReturnDocument
-from pyrogram import Client, filters
-from pyrogram import enums
+from pyrogram import Client, filters, enums
 from TEAMZYRO import ZYRO as app
-from TEAMZYRO import collection, user_collection, db, require_power
+from TEAMZYRO import collection, user_collection, db
 
 redeem_collection = db["redeem_codes"]  # Collection for redeem codes
 
+OWNER_ID = [6138142369, 7819315360]  # Replace with actual owner Telegram user IDs
+
 # Command to generate a redeem code
 @app.on_message(filters.command("cgen"))
-@require_power("VIP")
-async def generate_redeem_code(client, message):
+async def generate_redeem_code(client: Client, message):
+    if message.from_user.id not in OWNER_ID:
+        await message.reply_text("❌ Only the owner can use this command.")
+        return
+
     args = message.command
     if len(args) < 3:
         await message.reply_text("Usage: `/cgen <character_id> <redeem_limit>`", parse_mode=enums.ParseMode.MARKDOWN)
@@ -42,7 +46,6 @@ async def generate_redeem_code(client, message):
         "redeemed_by": []
     })
 
-    # Formatting message properly
     char_info = (
         f"🎭 *Character:* `{character['name']}`\n"
         f"📺 *Anime:* `{character.get('anime', 'Unknown')}`\n"
@@ -58,11 +61,8 @@ async def generate_redeem_code(client, message):
 
 
 # Command to redeem a code
-lock = {}  # Dictionary to prevent multiple redemptions at once
-
-# Command to redeem a code
 @app.on_message(filters.command("redeem"))
-async def redeem_character(client, message):
+async def redeem_character(client: Client, message):
     args = message.command
     if len(args) < 2:
         await message.reply_text("Usage: `/redeem <code>`", parse_mode=enums.ParseMode.MARKDOWN)
@@ -75,7 +75,7 @@ async def redeem_character(client, message):
         await message.reply_text("🤣 Aap pagal ban chuke ho! Happy April Fool! 🎉", parse_mode=enums.ParseMode.MARKDOWN)
         return
 
-    # Normal redeem process agar special code nahi hai
+    # Lookup redeem code
     redeem_data = await redeem_collection.find_one({"code": redeem_code})
     if not redeem_data:
         await message.reply_text("❌ Invalid or expired redeem code.", parse_mode=enums.ParseMode.MARKDOWN)
@@ -89,17 +89,20 @@ async def redeem_character(client, message):
         await message.reply_text("❌ This redeem code has reached its limit.", parse_mode=enums.ParseMode.MARKDOWN)
         return
 
+    # Fetch character data
     character = await collection.find_one({'id': redeem_data["character_id"]})
     if not character:
         await message.reply_text("❌ Character not found.", parse_mode=enums.ParseMode.MARKDOWN)
         return
 
+    # Add character to user's collection
     await user_collection.update_one(
         {'id': user_id},
         {'$push': {'characters': character}},
         upsert=True
     )
 
+    # Update redeemed_by list
     await redeem_collection.update_one(
         {"code": redeem_code},
         {"$push": {"redeemed_by": user_id}}
@@ -114,4 +117,3 @@ async def redeem_character(client, message):
     )
 
     await message.reply_text(char_info, parse_mode=enums.ParseMode.MARKDOWN, disable_web_page_preview=True)
-
