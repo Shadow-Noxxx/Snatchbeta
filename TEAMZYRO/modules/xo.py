@@ -17,7 +17,7 @@ async def xo_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         chat_id = update.effective_chat.id
         if chat_id in active_xo_games:
-            await update.message.reply_text("❗️ A Tic-Tac-Toe game is already running in this chat!")
+            await message.reply_text("❗️ A Tic-Tac-Toe game is already running in this chat!")
             return
         active_xo_games[chat_id] = {
             "players": [update.effective_user.id],
@@ -28,13 +28,13 @@ async def xo_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "usernames": {update.effective_user.id: update.effective_user.first_name},
             "message_id": None
         }
-        msg = await update.message.reply_text(
+        msg = await message.reply_text(
             "✅ Waiting for the second player. Another user should send /joinxo to join."
         )
         active_xo_games[chat_id]["message_id"] = msg.message_id
     except Exception as e:
         logging.error(f"Error in xo_start: {e}")
-        await update.message.reply_text("❌ Oops! Something went wrong starting the game.")
+        await message.reply_text("❌ Oops! Something went wrong starting the game.")
 
 async def xo_players_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return
@@ -44,13 +44,13 @@ async def join_xo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         chat_id = update.effective_chat.id
         game = active_xo_games.get(chat_id)
         if not game:
-            await update.message.reply_text("❌ No game found. Start a game with /xo.")
+            await message.reply_text("❌ No game found. Start a game with /xo.")
             return
         if len(game["players"]) >= 2:
-            await update.message.reply_text("❌ The game already has 2 players!")
+            await message.reply_text("❌ The game already has 2 players!")
             return
         if update.effective_user.id in game["players"]:
-            await update.message.reply_text("❗️ You already joined this game!")
+            await message.reply_text("❗️ You already joined this game!")
             return
         game["players"].append(update.effective_user.id)
         game["usernames"][update.effective_user.id] = update.effective_user.first_name
@@ -73,7 +73,7 @@ async def join_xo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             await show_xo_board(update, context, chat_id, edit=True)
         else:
-            msg = await update.message.reply_text(start_message)
+            msg = await message.reply_text(start_message)
             game["message_id"] = msg.message_id
             await show_xo_board(update, context, chat_id, edit=True)
     except Exception as e:
