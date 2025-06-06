@@ -5,6 +5,10 @@ from TEAMZYRO.modules import ALL_MODULES
 
 
 def main() -> None:
+    await load_sudo_users()
+    print("✅ Sudo users loaded.")
+    print("✅ Bot is now running.")
+    await application.updater.idle()
     for module_name in ALL_MODULES:
         imported_module = importlib.import_module("TEAMZYRO.modules." + module_name)
     LOGGER("TEAMZYRO.modules").info("𝐀𝐥𝐥 𝐅𝐞𝐚𝐭𝐮𝐫𝐞𝐬 𝐋𝐨𝐚𝐝𝐞𝐝 𝐁𝐚𝐛𝐲🥳...")
