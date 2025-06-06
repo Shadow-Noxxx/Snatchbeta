@@ -4,7 +4,7 @@ import logging
 
 from telegram.ext import ApplicationBuilder
 
-from TEAMZYRO import BOT_TOKEN  # Make sure BOT_TOKEN is imported from your config
+  # Make sure BOT_TOKEN is imported from your config
 from TEAMZYRO.modules import ALL_MODULES
 from TEAMZYRO import LOGGER, send_start_message  # Adjust as per your structure
 
@@ -12,7 +12,7 @@ from TEAMZYRO import LOGGER, send_start_message  # Adjust as per your structure
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
-
+BOT_TOKEN = "8053928530:AAFUnLykr0glC00IHD-_w8m-06y4oFSlCaI"
 # Build application
 application = ApplicationBuilder().token(BOT_TOKEN).build()
 
