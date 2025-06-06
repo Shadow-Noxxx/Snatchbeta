@@ -30,7 +30,7 @@ async def valentine(_, message: t.Message):
 
         if str(message.chat.id) != chat:
             join_button = InlineKeyboardMarkup([
-                [InlineKeyboardButton("Join Here", url="https://t.me/TEAMZYRO")]
+                [InlineKeyboardButton("Join Here", url="https://t.me/MidexozBotupdates")]
             ])
             return await message.reply_text(
                 "🔔 ᴊᴏɪɴ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴄʟᴀɪᴍ ʏᴏᴜʀ ᴅᴀɪʟʏ ᴄʜᴀʀᴀᴄᴛᴇʀ",
