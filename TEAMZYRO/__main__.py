@@ -1,32 +1,46 @@
+import asyncio
 import importlib
 import logging
-import asyncio
 
-from TEAMZYRO import application, ZYRO, LOGGER, send_start_message
+from telegram.ext import ApplicationBuilder
+
+from TEAMZYRO import BOT_TOKEN  # Make sure BOT_TOKEN is imported from your config
 from TEAMZYRO.modules import ALL_MODULES
+from TEAMZYRO import LOGGER, send_start_message  # Adjust as per your structure
+
+# Setup logging
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+
+# Build application
+application = ApplicationBuilder().token(BOT_TOKEN).build()
+
+# Expose it for modules to use
+import TEAMZYRO
+TEAMZYRO.application = application
 
 
-async def main() -> None:
-    # Load all bot modules
+async def main():
+    # Load modules dynamically and let them register their handlers
     for module_name in ALL_MODULES:
-        importlib.import_module("TEAMZYRO.modules." + module_name)
-    LOGGER("TEAMZYRO.modules").info("🎯 All features loaded successfully!")
+        importlib.import_module(f"TEAMZYRO.modules.{module_name}")
+        print(f"✅ Loaded module: {module_name}")
 
-    # Start the Pyrogram client (if you're using it alongside PTB)
-    ZYRO.start()
-    LOGGER("TEAMZYRO").info("✅ ZYRO client started.")
+    LOGGER("TEAMZYRO.modules").info("✅ All modules loaded successfully.")
 
-    # Initialize and start the application
+    # Start the bot
     await application.initialize()
     await application.start()
-    
+    LOGGER("TEAMZYRO").info("🤖 Bot started successfully.")
+
     send_start_message()
+
     LOGGER("TEAMZYRO").info(
         "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎ MADE BY TEAMZYRO ☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
     )
-    print("✅ Bot is now running.")
 
-    # Keep the bot running
+    # Run the bot until stopped
     await application.updater.start_polling()
     await application.updater.idle()
 
