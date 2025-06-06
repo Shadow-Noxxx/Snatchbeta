@@ -24,8 +24,6 @@ def main():
         "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎MADE BY TEAMZYRO☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
     )
 
-    application.updater.idle()
-
 
 if __name__ == "__main__":
     main()
