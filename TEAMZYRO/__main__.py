@@ -1,7 +1,7 @@
 import importlib
 import logging
 import asyncio
-from TEAMZYRO import *
+
 from TEAMZYRO import application, ZYRO, LOGGER, send_start_message
 from TEAMZYRO.modules import ALL_MODULES
 
@@ -12,19 +12,22 @@ async def main() -> None:
         importlib.import_module("TEAMZYRO.modules." + module_name)
     LOGGER("TEAMZYRO.modules").info("🎯 All features loaded successfully!")
 
-    # Start the bot
+    # Start the Pyrogram client (if you're using it alongside PTB)
     ZYRO.start()
-    LOGGER("TEAMZYRO").info("✅ Bot client started.")
+    LOGGER("TEAMZYRO").info("✅ ZYRO client started.")
 
-    # Run polling
+    # Initialize and start the application
+    await application.initialize()
     await application.start()
+    
     send_start_message()
     LOGGER("TEAMZYRO").info(
         "╔═════ஜ۩۞۩ஜ════╗\n  ☠︎︎ MADE BY TEAMZYRO ☠︎︎\n╚═════ஜ۩۞۩ஜ════╝"
     )
     print("✅ Bot is now running.")
-    
-    # Keep bot running
+
+    # Keep the bot running
+    await application.updater.start_polling()
     await application.updater.idle()
 
 
