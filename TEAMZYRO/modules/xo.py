@@ -5,7 +5,7 @@ from telegram.ext import (
 )
 
 active_xo_games = {}
-
+@bot.on_message(filters.command(["xo"]))
 async def xo_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         chat_id = update.effective_chat.id
@@ -31,7 +31,7 @@ async def xo_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def xo_players_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return
-
+@bot.on_message(filters.command(["joinxo"]))
 async def join_xo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         chat_id = update.effective_chat.id
@@ -199,7 +199,7 @@ async def show_xo_board(update, context, chat_id, edit: bool = False):
     except Exception as e:
         logging.error(f"Error in show_xo_board: {e}")
         await context.bot.send_message(chat_id, "❌ Failed to display the board.", parse_mode="HTML")
-
+@bot.on_message(filters.command(["cancelxo"]))
 async def cancel_xo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         chat_id = update.effective_chat.id
