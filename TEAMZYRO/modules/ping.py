@@ -2,7 +2,7 @@ import time
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
 
-from TEAMZYRO import application, sudo_users  # This will be the set, not collection
+from TEAMZYRO.unit.__init__ import application, sudo_users  # This will be the set, not collection
 
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
