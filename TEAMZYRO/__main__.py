@@ -6,7 +6,7 @@ from TEAMZYRO import application, LOGGER, send_start_message
 from TEAMZYRO.modules import ALL_MODULES
 
 
-async def main():
+def main():
     print("✅ Bot is now running.")
 
     # Import all modules to register handlers
@@ -28,4 +28,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
