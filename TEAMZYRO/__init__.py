@@ -45,8 +45,8 @@ UPDATE_CHAT = os.getenv("UPDATE_CHAT", "https://t.me/midexozbotupdates")
 
 import os
 
-SUDO = list(map(int, os.getenv("SUDO", "7819315360").split(',')))
-OWNER_ID = list(map(int, os.getenv("OWNER_ID", "7819315360").split(',')))
+SUDO = 7819315360
+OWNER_ID = 7819315360
 
 
 
