@@ -1,11 +1,9 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from TEAMZYRO import app, db, OWNER_ID
-from functools import wraps
 
 sudo_users = db['sudo_users']
 
-# Define all allowed powers
 ALL_POWERS = [
     "add_character",
     "delete_character",
@@ -15,30 +13,22 @@ ALL_POWERS = [
     "VIP"
 ]
 
-# Decorator to check if user is OWNER
-def owner_only(func):
-    @wraps(func)
-    async def wrapper(client, message, *args, **kwargs):
-        user_id = message.from_user.id if hasattr(message, 'from_user') else message.from_user.id
-        if user_id not in OWNER_ID:
-            if isinstance(message, CallbackQuery):
-                await message.answer("❌ You don't have permission.", show_alert=True)
-            else:
-                await message.reply_text("❌ You don't have permission.")
-            return
-        return await func(client, message, *args, **kwargs)
-    return wrapper
+def is_owner(user_id):
+    return user_id in OWNER_ID
 
 
-# /saddsudo [reply]
 @app.on_message(filters.command("saddsudo") & filters.reply)
-@owner_only
 async def add_sudo(client, message):
+    if not is_owner(message.from_user.id):
+        await message.reply("❌ You don't have permission.")
+        return
+
     replied_user_id = message.reply_to_message.from_user.id
     existing_user = await sudo_users.find_one({"_id": replied_user_id})
     if existing_user:
         await message.reply_text(f"User `{replied_user_id}` is already a sudo.")
         return
+
     await sudo_users.update_one(
         {"_id": replied_user_id},
         {"$set": {"powers": {"add_character": True}}},
@@ -47,10 +37,12 @@ async def add_sudo(client, message):
     await message.reply_text(f"✅ User `{replied_user_id}` added as sudo with 'add_character' power.")
 
 
-# /sremovesudo [reply or user_id]
 @app.on_message(filters.command("sremovesudo"))
-@owner_only
 async def remove_sudo(client, message):
+    if not is_owner(message.from_user.id):
+        await message.reply("❌ You don't have permission.")
+        return
+
     if message.reply_to_message:
         user_id = message.reply_to_message.from_user.id
     elif len(message.command) > 1 and message.command[1].isdigit():
@@ -68,10 +60,12 @@ async def remove_sudo(client, message):
     await message.reply_text(f"✅ User [{user_id}](tg://user?id={user_id}) removed from sudo.", disable_web_page_preview=True)
 
 
-# /seditsudo [reply]
 @app.on_message(filters.command("seditsudo") & filters.reply)
-@owner_only
 async def edit_sudo(client, message):
+    if not is_owner(message.from_user.id):
+        await message.reply("❌ You don't have permission.")
+        return
+
     replied_user_id = message.reply_to_message.from_user.id
     user_data = await sudo_users.find_one({"_id": replied_user_id})
     if not user_data:
@@ -88,13 +82,18 @@ async def edit_sudo(client, message):
         ])
     buttons.append([InlineKeyboardButton("❌ Close", callback_data="close_keyboard")])
 
-    await message.reply_text(f"🛠 Edit powers for `{replied_user_id}`:", reply_markup=InlineKeyboardMarkup(buttons))
+    await message.reply_text(
+        f"🛠 Edit powers for `{replied_user_id}`:",
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
 
 
-# Toggle a specific sudo power
 @app.on_callback_query(filters.regex(r"^toggle_(\d+)_(\w+)$"))
-@owner_only
-async def toggle_power(client, callback_query):
+async def toggle_power(client, callback_query: CallbackQuery):
+    if not is_owner(callback_query.from_user.id):
+        await callback_query.answer("❌ You don't have permission.", show_alert=True)
+        return
+
     user_id = int(callback_query.matches[0].group(1))
     power = callback_query.matches[0].group(2)
 
@@ -124,18 +123,22 @@ async def toggle_power(client, callback_query):
     await callback_query.message.edit_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
 
 
-# Close the inline keyboard
 @app.on_callback_query(filters.regex(r"^close_keyboard$"))
-@owner_only
-async def close_keyboard(client, callback_query):
+async def close_keyboard(client, callback_query: CallbackQuery):
+    if not is_owner(callback_query.from_user.id):
+        await callback_query.answer("❌ You don't have permission.", show_alert=True)
+        return
+
     await callback_query.message.edit_reply_markup(reply_markup=None)
     await callback_query.answer("Closed!", show_alert=True)
 
 
-# /sudolist command
 @app.on_message(filters.command("sudolist"))
-@owner_only
 async def sudo_list(client, message):
+    if not is_owner(message.from_user.id):
+        await message.reply("❌ You don't have permission.")
+        return
+
     users = await sudo_users.find().to_list(length=None)
     if not users:
         await message.reply_text("There are no sudo users.")
