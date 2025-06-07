@@ -1,71 +1,69 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from TEAMZYRO import app as Client, user_collection, require_power
+from TEAMZYRO import app as Client, user_collection, OWNER_ID
 
 
 @Client.on_message(filters.command("transfer"))
-@require_power("VIP")
 async def transfer_collection(client: Client, message: Message):
+    sender_id = message.from_user.id
+
+    if sender_id not in OWNER_ID:
+        await message.reply_text("❌ You don't have permission to use this command.")
+        return
+
     try:
-        # Get the user ID and owner ID from command arguments
         args = message.command[1:]  # Skip the command itself
         if len(args) != 2:
-            await message.reply_text('Incorrect format. Please use: /transfer user_id owner_id')
+            await message.reply_text('❌ Incorrect format.\nUse: `/transfer user_id owner_id`', quote=True)
             return
 
         user_id = int(args[0])
         owner_id = int(args[1])
 
-        # Check if the user exists
+        # Fetch both user and owner from the database
         user = await user_collection.find_one({'id': user_id})
-        if not user:
-            await message.reply_text('User not found.')
-            return
-
-        # Check if the owner exists
         owner = await user_collection.find_one({'id': owner_id})
+
+        if not user:
+            await message.reply_text('❌ User not found.')
+            return
         if not owner:
-            await message.reply_text('Owner not found.')
+            await message.reply_text('❌ Owner not found.')
             return
 
-        # Get the user's and owner's character collections
         user_characters = user.get('characters', [])
         owner_characters = owner.get('characters', [])
 
         if user_characters:
-            # Transfer characters from user to owner
+            # Transfer from user to owner
             await user_collection.update_one(
                 {'id': owner_id},
                 {'$push': {'characters': {'$each': user_characters}}}
             )
-
-            # Clear the user's character collection after transfer
             await user_collection.update_one(
                 {'id': user_id},
                 {'$set': {'characters': []}}
             )
-
             await message.reply_text(
-                f"Successfully transferred {len(user_characters)} characters from user with ID {user_id} to owner with ID {owner_id}."
+                f"✅ Transferred {len(user_characters)} characters from user `{user_id}` to owner `{owner_id}`."
             )
+
         elif owner_characters:
-            # If the user has no characters, transfer from owner back to user
+            # Transfer from owner to user
             await user_collection.update_one(
                 {'id': user_id},
                 {'$push': {'characters': {'$each': owner_characters}}}
             )
-
-            # Clear the owner's character collection after transfer
             await user_collection.update_one(
                 {'id': owner_id},
                 {'$set': {'characters': []}}
             )
-
             await message.reply_text(
-                f"Successfully transferred {len(owner_characters)} characters from owner with ID {owner_id} back to user with ID {user_id}."
+                f"✅ Transferred {len(owner_characters)} characters from owner `{owner_id}` to user `{user_id}`."
             )
+
         else:
-            await message.reply_text('Neither the user nor the owner have any characters to transfer.')
+            await message.reply_text("⚠️ Neither the user nor the owner have characters to transfer.")
 
     except Exception as e:
-        await message.reply_text(f'An error occurred: {str(e)}')
+        await message.reply_text(f"❌ An error occurred:\n`{str(e)}`")
